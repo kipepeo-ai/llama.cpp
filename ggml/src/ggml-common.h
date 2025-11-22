@@ -194,6 +194,35 @@ typedef struct {
 } block_mxfp4;
 static_assert(sizeof(block_mxfp4) == sizeof(uint8_t) + QK_MXFP4/2, "wrong mxfp4 block size/padding");
 
+// AfricaQuant block sizes (128 weights per block)
+#define QK_AFRICA_1_28 128
+#define QK_AFRICA_1_58 128
+
+// AfricaQuant 1.28-bit block structure
+// Contains quantized data (packed) + metadata (scale, zero_point)
+// 128 weights * 1.28 bits = 163.84 bits ≈ 21 bytes for quantized data
+// Metadata: 2 floats (scale, zero_point) = 8 bytes
+// Total: ~29 bytes per block (rounded up to 32 for alignment)
+typedef struct {
+    float scale;              // Scaling factor for this block
+    float zero_point;         // Zero point for asymmetric quantization
+    uint8_t qs[21];          // Quantized data (128 weights * 1.28 bits / 8, rounded up)
+    uint8_t padding[3];      // Padding to align to 32 bytes
+} block_africa_1_28;
+static_assert(sizeof(block_africa_1_28) == 32, "wrong africa_1_28 block size/padding");
+
+// AfricaQuant 1.58-bit block structure
+// 128 weights * 1.58 bits = 202.24 bits ≈ 26 bytes for quantized data
+// Metadata: 2 floats (scale, zero_point) = 8 bytes
+// Total: ~34 bytes per block (rounded up to 40 for alignment)
+typedef struct {
+    float scale;              // Scaling factor for this block
+    float zero_point;         // Zero point for asymmetric quantization
+    uint8_t qs[26];          // Quantized data (128 weights * 1.58 bits / 8, rounded up)
+    uint8_t padding[6];      // Padding to align to 40 bytes
+} block_africa_1_58;
+static_assert(sizeof(block_africa_1_58) == 40, "wrong africa_1_58 block size/padding");
+
 #define QK5_0 32
 typedef struct {
     ggml_half d;           // delta

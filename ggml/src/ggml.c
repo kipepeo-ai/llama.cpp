@@ -695,6 +695,22 @@ static const struct ggml_type_traits type_traits[GGML_TYPE_COUNT] = {
         .to_float                 = (ggml_to_float_t) dequantize_row_mxfp4,
         .from_float_ref           = (ggml_from_float_t)quantize_row_mxfp4_ref,
     },
+    [GGML_TYPE_AFRICA_1_28] = {
+        .type_name                = "africa_1_28",
+        .blck_size                = QK_AFRICA_1_28,
+        .type_size                = sizeof(block_africa_1_28),
+        .is_quantized             = true,
+        .to_float                 = (ggml_to_float_t) dequantize_row_africa_1_28,
+        .from_float_ref           = (ggml_from_float_t) quantize_row_africa_1_28_ref,
+    },
+    [GGML_TYPE_AFRICA_1_58] = {
+        .type_name                = "africa_1_58",
+        .blck_size                = QK_AFRICA_1_58,
+        .type_size                = sizeof(block_africa_1_58),
+        .is_quantized             = true,
+        .to_float                 = (ggml_to_float_t) dequantize_row_africa_1_58,
+        .from_float_ref           = (ggml_from_float_t) quantize_row_africa_1_58_ref,
+    },
     [GGML_TYPE_Q2_K] = {
         .type_name                = "q2_K",
         .blck_size                = QK_K,
