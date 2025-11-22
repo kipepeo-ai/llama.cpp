@@ -209,6 +209,7 @@ add_library(ggml-base
             ggml-threading.h
             ggml-quants.c
             ggml-quants.h
+            ggml-quants-africa.c
             gguf.cpp)
 
 set_target_properties(ggml-base PROPERTIES
@@ -435,6 +436,19 @@ if (MATH_LIBRARY)
     if (NOT WIN32 OR NOT DEFINED ENV{ONEAPI_ROOT})
         target_link_libraries(ggml-base PRIVATE m)
     endif()
+endif()
+
+# Link AfricaQuant library if available
+# Note: This requires the kipepeo_quantization library to be built and available
+# The functions kipepeo_quantize_1_28bit, kipepeo_dequantize_1_28bit,
+# kipepeo_quantize_1_58bit, and kipepeo_dequantize_1_58bit are declared
+# as extern in ggml-quants-africa.c and must be resolved at link time.
+if (TARGET kipepeo_quantization)
+    target_link_libraries(ggml-base PRIVATE kipepeo_quantization)
+    message(STATUS "Linking AfricaQuant library to ggml-base")
+else()
+    message(WARNING "kipepeo_quantization target not found. AfricaQuant types will not work without linking the quantization library.")
+    message(WARNING "To enable AfricaQuant support, ensure kipepeo_quantization is built before ggml.")
 endif()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Android")

@@ -1,18 +1,27 @@
 // AfricaQuant integration for GGML
 // This file provides wrapper functions to integrate AfricaQuant quantization
 // with GGML's quantization system
+//
+// BUILD REQUIREMENTS:
+// 1. This file must be compiled and linked with ggml-base
+// 2. The kipepeo_quantization library must be linked (see CMakeLists.txt)
+// 3. The AfricaQuant C API functions must be available at link time:
+//    - kipepeo_quantize_1_28bit
+//    - kipepeo_dequantize_1_28bit
+//    - kipepeo_quantize_1_58bit
+//    - kipepeo_dequantize_1_58bit
 
 #include "ggml-quants.h"
 #include "ggml-common.h"
 
-// Include AfricaQuant C API
-// Note: This assumes the AfricaQuant library is linked and headers are available
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 // Forward declarations for AfricaQuant C API
 // These should match the functions in kipepeo/quantization/africa_quant.h
+// If the header is available, you can include it instead:
+// #include "kipepeo/quantization/africa_quant.h"
 extern bool kipepeo_quantize_1_28bit(
     const float* weights,
     size_t count,
